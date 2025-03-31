@@ -21,7 +21,6 @@ interface CronometroProps {
 export const Cronometro = ({ disciplina, tema }: CronometroProps) => {
   const { addEstudo } = useEstudoContext();
 
-  // Chame o hook APENAS UMA VEZ
   const {
     horas,
     minutos,
@@ -115,7 +114,6 @@ export const Cronometro = ({ disciplina, tema }: CronometroProps) => {
         </div>
       </div>
 
-      {/* Botões com mais espaço e alinhamento correto */}
       <div className="flex flex-wrap justify-center gap-6 w-full">
         <ButtonUtils value="Iniciar" onClick={validarIniciarCronometro} />
         <ButtonUtils value="Pausar" onClick={pausarCronometro} />
@@ -123,7 +121,6 @@ export const Cronometro = ({ disciplina, tema }: CronometroProps) => {
         <ButtonUtils value="Salvar Tempo" onClick={abrirModalSalvar} />
       </div>
 
-      {/* Mensagem de erro animada */}
       {erro && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -136,7 +133,6 @@ export const Cronometro = ({ disciplina, tema }: CronometroProps) => {
         </motion.div>
       )}
 
-      {/* Modal de confirmação */}
       <AlertDialog open={modalAberto} onOpenChange={fecharModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
