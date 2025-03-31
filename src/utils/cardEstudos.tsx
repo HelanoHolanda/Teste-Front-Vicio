@@ -1,46 +1,34 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { Estudo } from "@/context/estudosContext";
+import { useEstudoContext } from "@/context/estudosContext";
 
-export function EstudosCard({
-  estudo,
-  isLoading = false,
-}: {
-  estudo?: Estudo;
-  isLoading?: boolean;
-}) {
-  if (isLoading || !estudo) {
-    return (
-      <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-md">
-        <div className="flex justify-between items-start">
-          <div className="space-y-2">
-            <Skeleton className="h-6 w-[200px]" />
-            <Skeleton className="h-4 w-[150px]" />
-          </div>
-        </div>
-        <div className="mt-4">
-          <Skeleton className="h-8 w-[100px]" />
-        </div>
-      </div>
-    );
+export default function EstudosCard() {
+  const { estudos } = useEstudoContext();
+
+  // Não renderiza nada se não houver estudos
+  if (!estudos || estudos.length === 0) {
+    return null;
   }
 
   return (
-    <div className="bg-linear-to-bl from-violet-500 to-fuchsia-500 w-full max-w-4xl rounded-2xl p-6 shadow-lg">
-      <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-4xl">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-bold text-lg text-purple-800">
-              {estudo.disciplina}
-            </h3>
-            <p className="text-gray-600">{estudo.tema}</p>
+    <div className="grid grid-cols-1 gap-4 md:flex md:flex-wrap md:justify-center md:gap-6">
+      {estudos.map((estudo, index) => (
+        <div
+          key={index}
+          className="bg-purple-800 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)] rounded-2xl p-1 shadow-lg transition-all hover:scale-[1.02]"
+        >
+          <div className="bg-purple-100 p-4 rounded-lg shadow-md w-full h-full">
+            <div className="flex flex-col h-full">
+              <div className="flex-1">
+                <h3 className="font-bold text-lg text-purple-800 mb-2">
+                  {estudo.disciplina}
+                </h3>
+                <p className="text-gray-600">{estudo.tema}</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="mt-2">
-          <p className="text-2xl font-bold text-gray-800">{estudo.tempo}</p>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }

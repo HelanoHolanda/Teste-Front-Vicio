@@ -1,26 +1,13 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useEstudoContext } from "@/context/estudosContext";
 
-export default function EstudosCard({
-  isLoading = false,
-}: {
-  isLoading?: boolean;
-}) {
+export default function EstudosCard() {
   const { estudos } = useEstudoContext();
 
-  // Exibir skeleton enquanto carrega
-  if (isLoading || !estudos || estudos.length === 0) {
-    return (
-      <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-md">
-        <div className="space-y-4">
-          <Skeleton className="h-6 w-[200px]" />
-          <Skeleton className="h-4 w-[150px]" />
-          <Skeleton className="h-8 w-[100px]" />
-        </div>
-      </div>
-    );
+  // Não renderiza nada se não houver estudos
+  if (!estudos || estudos.length === 0) {
+    return null;
   }
 
   return (
