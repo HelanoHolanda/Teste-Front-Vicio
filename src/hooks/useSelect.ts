@@ -5,6 +5,7 @@ export function useSelect(initialValue: string = "") {
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
+    console.log(newValue);
   };
 
   const reset = () => {

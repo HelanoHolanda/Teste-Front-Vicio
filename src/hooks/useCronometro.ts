@@ -1,37 +1,39 @@
 import { useState, useRef, useEffect } from "react";
 
 export const useCronometro = () => {
-  const [horas, setHoras] = useState(0);
-  const [minutos, setMinutos] = useState(0);
-  const [segundos, setSegundos] = useState(0);
-  const [milissegundos, setMilissegundos] = useState(0);
-  const [emExecucao, setEmExecucao] = useState(false);
+  const [tempoTotalMs, setTempoTotalMs] = useState<number>(0);
+  const [emExecucao, setEmExecucao] = useState<boolean>(false);
   const intervaloRef = useRef<NodeJS.Timeout | null>(null);
 
-  const iniciarCronometro = () => {
+  useEffect(() => {
+    const tempoSalvo = Number(localStorage.getItem("tempoCronometro")) || 0;
+    const rodando = localStorage.getItem("cronometroRodando") === "true";
+    const inicioSalvo = Number(localStorage.getItem("tempoInicio")) || null;
+
+    if (rodando && inicioSalvo) {
+      const tempoDecorrido = Date.now() - inicioSalvo;
+      setTempoTotalMs(tempoSalvo + tempoDecorrido);
+      iniciarCronometro(true, tempoSalvo + tempoDecorrido);
+    } else {
+      setTempoTotalMs(tempoSalvo);
+    }
+  }, []);
+
+  const iniciarCronometro = (
+    restaurando = false,
+    tempoInicial = tempoTotalMs
+  ) => {
     if (emExecucao) return;
     setEmExecucao(true);
+
+    const inicio = restaurando
+      ? Date.now() - tempoInicial
+      : Date.now() - tempoTotalMs;
+    localStorage.setItem("cronometroRodando", "true");
+    localStorage.setItem("tempoInicio", inicio.toString());
+
     intervaloRef.current = setInterval(() => {
-      setMilissegundos((msAnterior) => {
-        if (msAnterior === 99) {
-          // Ajustado para 2 dígitos
-          setSegundos((segAnterior) => {
-            if (segAnterior === 59) {
-              setMinutos((minAnterior) => {
-                if (minAnterior === 59) {
-                  setHoras((horaAnterior) => horaAnterior + 1);
-                  return 0;
-                }
-                return minAnterior + 1;
-              });
-              return 0;
-            }
-            return segAnterior + 1;
-          });
-          return 0;
-        }
-        return msAnterior + 1;
-      });
+      setTempoTotalMs(Date.now() - inicio);
     }, 10);
   };
 
@@ -41,27 +43,20 @@ export const useCronometro = () => {
       clearInterval(intervaloRef.current);
       intervaloRef.current = null;
     }
+    localStorage.setItem("cronometroRodando", "false");
+    localStorage.setItem("tempoCronometro", tempoTotalMs.toString());
   };
 
   const resetarCronometro = () => {
     pausarCronometro();
-    setHoras(0);
-    setMinutos(0);
-    setSegundos(0);
-    setMilissegundos(0);
+    setTempoTotalMs(0);
+    localStorage.removeItem("tempoCronometro");
+    localStorage.removeItem("tempoInicio");
   };
 
   const salvarTempo = () => {
-    const tempo = `${String(horas).padStart(2, "0")}:${String(minutos).padStart(
-      2,
-      "0"
-    )}:${String(segundos).padStart(2, "0")}.${String(milissegundos).padStart(
-      2,
-      "0"
-    )}`;
-    console.log("Tempo salvo:", tempo);
-    resetarCronometro();
-    return tempo;
+    localStorage.setItem("tempoCronometro", tempoTotalMs.toString());
+    return tempoTotalMs;
   };
 
   useEffect(() => {
@@ -71,6 +66,11 @@ export const useCronometro = () => {
       }
     };
   }, []);
+
+  const milissegundos = Math.floor((tempoTotalMs % 1000) / 10);
+  const segundos = Math.floor((tempoTotalMs / 1000) % 60);
+  const minutos = Math.floor((tempoTotalMs / (1000 * 60)) % 60);
+  const horas = Math.floor(tempoTotalMs / (1000 * 60 * 60));
 
   return {
     horas,
