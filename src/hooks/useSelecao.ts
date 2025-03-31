@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-export function useSelect(initialValue: string = "") {
+export default function useSelecao(initialValue: string = "") {
   const [value, setValue] = useState<string>(initialValue);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
-    console.log(newValue);
   };
 
   const reset = () => {
@@ -14,7 +13,7 @@ export function useSelect(initialValue: string = "") {
 
   return {
     value,
-    onChange: handleChange,
+    handleChange,
     setValue,
     reset,
   };

@@ -11,15 +11,15 @@ export default function EstudosCard() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:flex md:flex-wrap md:justify-center md:gap-6">
-      {estudos.map((estudo, index) => (
-        <div
-          key={index}
-          className="bg-purple-800 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)] rounded-2xl p-1 shadow-lg transition-all hover:scale-[1.02]"
-        >
-          <div className="bg-purple-100 p-4 rounded-lg shadow-md w-full h-full">
-            <div className="flex flex-col h-full">
-              <div className="flex-1">
+    <div className="bg-purple-800 w-full mt-4 max-w-4xl rounded-xl p-2 shadow-lg flex flex-col justify-center items-center gap-2 hover:scale-[1.02]">
+      <div className="grid grid-cols-1  gap-6 w-full">
+        {estudos.map((estudo, index) => (
+          <div
+            key={index}
+            className="bg-purple-800 w-full rounded-2xl p-1 shadow-lg transition-all "
+          >
+            <div className="bg-purple-100 p-4 rounded-lg shadow-md w-full h-full flex flex-col min-h-full">
+              <div className="flex-1 flex flex-col">
                 <h3 className="font-bold text-lg text-purple-800 mb-2">
                   {estudo.disciplina}
                 </h3>
@@ -27,8 +27,8 @@ export default function EstudosCard() {
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,17 +1,30 @@
 "use client";
 
-import { useSelect } from "@/hooks/useSelect";
 import { Cronometro } from "@/utils/Cronometro";
 import Header from "@/utils/Header";
-import { SelectStudy } from "@/utils/SelectStudy";
-
-import EstudosCard from "./cardEstudo/page";
 import Descricao from "@/utils/Descricao";
 import { useEffect } from "react";
+import SelecioneMateria from "@/utils/SelecaoMateria";
+import EstudosCard from "@/utils/cardEstudos";
+import useSelecao from "@/hooks/useSelecao";
 
 export default function Home() {
-  const disciplina = useSelect();
-  const tema = useSelect();
+  const temasDisciplina: Record<string, string[]> = {
+    "Direito Penal": ["Crime Doloso", "Crime Culposo", "Pena Privativa"],
+    "Direito Administrativo": [
+      "Atos Administrativos",
+      "Serviço Público",
+      "Licitação e Contratos",
+    ],
+    "Direito Constitucional": [
+      "Direitos Fundamentais",
+      "Poder Executivo",
+      "Organização do Estado",
+    ],
+  };
+
+  const disciplina = useSelecao();
+  const tema = useSelecao();
 
   useEffect(() => {
     if (disciplina.value) {
@@ -41,20 +54,18 @@ export default function Home() {
       <div className="bg-[url(/novo-bg.png)] w-full flex justify-center items-center flex-col gap-8 px-4">
         <div className="bg-purple-800 w-full mt-16 max-w-4xl rounded-2xl p-6 shadow-lg flex flex-col justify-center md:flex-row items-center gap-4">
           <div className="flex flex-col gap-4">
-            <SelectStudy
+            <SelecioneMateria
               label="Disciplina"
-              options={[
-                "Direito Penal",
-                "Direito Administrativo",
-                "Direito Constitucional",
-              ]}
+              options={Object.keys(temasDisciplina)}
               {...disciplina}
+              onChange={disciplina.handleChange}
             />
 
-            <SelectStudy
+            <SelecioneMateria
               label="Tema"
-              options={["Teoria 1", "Teoria 2", "Teoria 3"]}
+              options={temasDisciplina[disciplina.value] ?? []}
               {...tema}
+              onChange={tema.handleChange}
             />
           </div>
           <Cronometro disciplina={disciplina.value} tema={tema.value} />

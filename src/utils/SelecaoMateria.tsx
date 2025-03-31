@@ -10,14 +10,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface SelectProps {
+interface SelecaoProps {
   label: string;
   options: string[];
   onChange?: (value: string) => void;
   value?: string;
 }
 
-export function SelectStudy({ options, label, onChange, value }: SelectProps) {
+export default function SelecioneMateria({
+  options,
+  label,
+  onChange,
+  value,
+}: SelecaoProps) {
   const handleValueChange = (value: string) => {
     if (onChange) {
       onChange(value);
